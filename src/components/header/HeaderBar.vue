@@ -17,7 +17,25 @@
         </el-input>
       </div>
       <div class="right">
-        <el-avatar :size="37.5" fit="fit" :src="avatorImg"></el-avatar>
+        <div>
+          <el-popover
+            placement="bottom"
+            width="200"
+            trigger="click"
+          >
+            <el-table :data="loginData">
+              <el-table-column></el-table-column>
+              <el-table-column></el-table-column>
+              <el-table-column></el-table-column>
+            </el-table>
+            <el-avatar
+              :size="37.5"
+              fit="fit"
+              :src="avatorImg"
+              slot="reference"
+            ></el-avatar>
+          </el-popover>
+        </div>
         <span>点击头像登录</span>
       </div>
     </div>
@@ -30,7 +48,14 @@ export default {
     return {
       searchInput: "",
       avatorImg: require("@/../public/img/test.jpg"),
+      loginData: [],
     };
+  },
+  methods: {
+    // 登录
+    login() {
+      console.log("1");
+    },
   },
 };
 </script>
@@ -93,6 +118,7 @@ export default {
         color: white;
         .el-input__icon {
           line-height: 35px;
+          cursor: pointer;
         }
       }
     }
@@ -107,6 +133,8 @@ export default {
     font-size: 15px;
     .el-avatar {
       margin-right: 10px;
+      cursor: pointer;
+      transform: translateY(2px);
     }
   }
 }
