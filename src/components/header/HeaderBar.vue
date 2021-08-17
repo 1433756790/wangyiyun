@@ -5,8 +5,8 @@
       <div class="center">
         <!-- 控制页面向前向后跳转的按钮 -->
         <div class="arrows">
-          <span><i class="el-icon-arrow-left"></i></span>
-          <span><i class="el-icon-arrow-right"></i></span>
+          <span><i class="el-icon-arrow-left" @click="pushPage(-1)"></i></span>
+          <span><i class="el-icon-arrow-right" @click="pushPage(1)"></i></span>
         </div>
         <!-- 输入框 -->
         <el-input
@@ -122,7 +122,7 @@ export default {
     async loginOut() {
       const { data: res } = await this.$http("/logout");
       if (res.code === 200) {
-        console.log(res)
+        console.log(res);
         this.userInfo = {};
         window.localStorage.setItem("userInfo", "");
         this.$store.commit("updataLoginState");
@@ -130,6 +130,10 @@ export default {
         this.$message.success("退出成功");
         this.$router.go(0);
       }
+    },
+    // 控制页面前进后退跳转
+    pushPage(a) {
+      this.$router.go(a);
     },
   },
   created() {
@@ -175,6 +179,7 @@ export default {
         }
         i {
           margin-top: 5px;
+          cursor: pointer;
         }
       }
     }

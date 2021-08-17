@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const state = {
     // 是否登录
-    isLogin: false
+    isLogin: false,
 }
 
 const store = new Vuex.Store({
@@ -15,6 +15,7 @@ const store = new Vuex.Store({
         updataLoginState(state) {
             state.isLogin = !state.isLogin;
         },
+       
     }
 })
 

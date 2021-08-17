@@ -22,6 +22,9 @@ export default {
       this.$router.push(tab.name);
     },
   },
+  updated() {
+    this.activeName = this.$route.path;
+  },
 };
 </script>
 

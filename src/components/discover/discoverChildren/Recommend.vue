@@ -9,7 +9,12 @@
     <div class="recommmendMusic">
       <h2>推荐歌单<i class="el-icon-arrow-right"></i></h2>
       <div class="listCard">
-        <div class="musicItem" v-for="(item, index) in musicList" :key="index">
+        <div
+          class="musicItem"
+          v-for="(item, index) in musicList"
+          :key="index"
+          @click="pushMusicDetails(item.id)"
+        >
           <img :src="item.picUrl" />
           <div class="musicDescribe">{{ item.name }}</div>
         </div>
@@ -43,6 +48,10 @@ export default {
       const { data: res } = await this.$http("/personalized", { limit: 10 });
       this.musicList = res.result;
       console.log(res);
+    },
+    // 跳转到歌单详情
+    pushMusicDetails(id) {
+      this.$router.push({ name: "musicDetails", params: { id } });
     },
   },
 };
@@ -85,5 +94,4 @@ export default {
 .musicItem img {
   width: 100%;
 }
-
 </style>

@@ -61,8 +61,11 @@ export default {
     background-color: red;
   }
   /deep/ .el-aside {
-    height: calc(100vh - 135px);
+    height: calc(100vh - 131px);
     border-right: 1px solid #ccc;
+  }
+  .el-container{
+    height: 100%;
   }
 }
 /deep/.el-menu {
@@ -80,7 +83,7 @@ export default {
 /deep/.el-main {
   padding-top: 12px;
   padding-left: 30px;
-  max-height: calc(100vh - 135px);
+  max-height: calc(100vh - 131px);
   padding-bottom: 0;
   &::-webkit-scrollbar {
     width: 10px;
@@ -90,5 +93,7 @@ export default {
   border-top: 1px solid #ccc;
   box-sizing: content-box;
   padding-top: 6px;
+  z-index: 9999;
+  background-color: #fff;
 }
 </style>>
