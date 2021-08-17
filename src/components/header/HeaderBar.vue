@@ -18,25 +18,61 @@
       </div>
       <div class="right">
         <div>
+          <!-- 未登录状态 -->
           <el-popover
             placement="bottom"
-            width="200"
+            width="330"
             trigger="click"
+            v-if="!userInfo.avatarUrl"
           >
-            <el-table :data="loginData">
-              <el-table-column></el-table-column>
-              <el-table-column></el-table-column>
-              <el-table-column></el-table-column>
-            </el-table>
+            <el-form ref="form" :model="loginData" label-width="80px">
+              <el-form-item label="手机号码"
+                ><el-input
+                  placeholder="请输入电话"
+                  prefix-icon="el-icon-phone"
+                  v-model="loginData.phone"
+                >
+                </el-input
+              ></el-form-item>
+              <el-form-item label="密码"
+                ><el-input
+                  placeholder="请输入密码"
+                  prefix-icon="el-icon-lock"
+                  v-model="loginData.password"
+                  type="password"
+                >
+                </el-input
+              ></el-form-item>
+              <el-form-item
+                ><el-button type="danger" @click="login"
+                  >登录</el-button
+                ></el-form-item
+              >
+            </el-form>
             <el-avatar
               :size="37.5"
               fit="fit"
               :src="avatorImg"
               slot="reference"
+              @click="isPopoverShow = !isPopoverShow"
+            ></el-avatar>
+          </el-popover>
+          <!-- 登录状态 -->
+          <el-popover placement="bottom" width="330" trigger="click" v-else>
+            <el-button type="danger" @click="loginOut" class="loginOut"
+              >退出登录</el-button
+            >
+            <el-avatar
+              :size="37.5"
+              fit="fit"
+              :src="userInfo.avatarUrl"
+              slot="reference"
+              v-model="isPopoverShow"
             ></el-avatar>
           </el-popover>
         </div>
-        <span>点击头像登录</span>
+        <span v-if="!userInfo.nickname">点击头像登录</span>
+        <span v-else>{{ userInfo.nickname }}</span>
       </div>
     </div>
   </div>
@@ -48,14 +84,56 @@ export default {
     return {
       searchInput: "",
       avatorImg: require("@/../public/img/test.jpg"),
-      loginData: [],
+      loginData: {
+        phone: "15715268261",
+        password: "yyh502498",
+      },
+      // 登录登出显示
+      isPopoverShow: false,
+      // 用户信息
+      userInfo: {},
     };
   },
   methods: {
     // 登录
-    login() {
-      console.log("1");
+    async login() {
+      const { data: res } = await this.$http("/login/cellphone", {
+        phone: this.loginData.phone,
+        password: this.loginData.password,
+        withCredentials: true,
+      });
+      if (res.code === 200) {
+        console.log(res);
+        window.localStorage.setItem("userInfo", JSON.stringify(res.profile));
+        this.userInfo = res.profile;
+        this.isPopoverShow = false;
+        this.$message.success("登录成功");
+        this.$router.go(0);
+      }
     },
+    // 判断是否已经登录
+    isLogin() {
+      if (window.localStorage.getItem("userInfo")) {
+        this.$store.commit("updataLoginState");
+        this.userInfo = JSON.parse(window.localStorage.getItem("userInfo"));
+      }
+    },
+    // 退出登录的回调
+    async loginOut() {
+      const { data: res } = await this.$http("/logout");
+      if (res.code === 200) {
+        console.log(res)
+        this.userInfo = {};
+        window.localStorage.setItem("userInfo", "");
+        this.$store.commit("updataLoginState");
+        this.isPopoverShow = false;
+        this.$message.success("退出成功");
+        this.$router.go(0);
+      }
+    },
+  },
+  created() {
+    this.isLogin();
   },
 };
 </script>
@@ -137,5 +215,8 @@ export default {
       transform: translateY(2px);
     }
   }
+}
+.loginOut {
+  transform: translateX(115px);
 }
 </style>
