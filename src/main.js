@@ -2,6 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index'
+import moment from 'moment'
+// 封装是全局指令
+Vue.filter('datefmt', function (input, fmtstring) {//当input为时间戳，需转为Number类型
+  if (input) {
+    return moment(input).format(fmtstring);
+  } else {
+    return "";
+  }
+});
 
 // 引入axios
 import { request } from './network/request'
