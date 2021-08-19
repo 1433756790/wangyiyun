@@ -4,26 +4,24 @@
       <div class="top">
         <!-- 左侧歌单图片 -->
         <div class="avatorImg">
-          <img :src="listDetailsData.playlist.coverImgUrl" alt="" />
+          <img :src="listDetailsData.coverImgUrl" alt="" />
         </div>
         <!-- 右侧歌单介绍 -->
         <div class="right">
           <div class="row1">
             <el-tag type="danger" size="mini">歌单</el-tag>
-            <h1>{{ listDetailsData.playlist.name }}</h1>
+            <h1>{{ listDetailsData.name }}</h1>
           </div>
           <div class="row2">
             <el-avatar
               :size="30"
-              :src="listDetailsData.playlist.creator.avatarUrl"
+              :src="listDetailsData.creator.avatarUrl"
             ></el-avatar>
             <div class="nickname">
-              {{ listDetailsData.playlist.creator.nickname }}
+              {{ listDetailsData.creator.nickname }}
             </div>
             <div class="createTime">
-              {{
-                listDetailsData.playlist.createTime | datefmt("YYYY-MM-DD")
-              }}创建
+              {{ listDetailsData.createTime | datefmt("YYYY-MM-DD") }}创建
             </div>
           </div>
           <div class="row3">
@@ -38,31 +36,35 @@
             </el-button>
           </div>
           <div class="row4">
-            <span
-              v-for="(item, index) in listDetailsData.playlist.tags"
-              :key="index"
-              ><span>标签:</span>{{ item }}
+            <span>标签:</span>
+            <span v-for="(item, index) in listDetailsData.tags" :key="index"
+              >{{ item }}
             </span>
           </div>
           <div class="row5">
-            <div>歌曲：{{ listDetailsData.playlist.trackCount }}</div>
-            <div>播放量：{{ listDetailsData.playlist.playCount }}</div>
+            <div>歌曲：{{ listDetailsData.trackCount }}</div>
+            <div>播放量：{{ listDetailsData.playCount }}</div>
           </div>
-          <div class="row6" style="font-size: 13px;">
-            <div>简介：{{ listDetailsData.playlist.description }}</div>
+          <div class="row6">
+            <div>简介：{{ listDetailsData.description }}</div>
           </div>
         </div>
       </div>
-      <div class="bottom"></div>
+      <div class="bottom">
+        <music-details-bottom :musicList="musicList"></music-details-bottom>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import MusicDetailsBottom from "./musicDetailsChild/MusicDetailsBottom.vue";
 export default {
+  components: { MusicDetailsBottom },
   data() {
     return {
       listDetailsData: {},
+      musicList: [],
     };
   },
   created() {
@@ -74,7 +76,8 @@ export default {
       const { data: res } = await this.$http(`/playlist/detail`, {
         id: this.$route.params.id,
       });
-      this.listDetailsData = res;
+      this.listDetailsData = res.playlist;
+      this.musicList = res.playlist.tracks;
       console.log(res);
     },
   },
@@ -86,6 +89,7 @@ export default {
   margin-top: 20px;
   .top {
     display: flex;
+    margin-bottom: 35px;
     .avatorImg {
       height: 187.5px;
       width: 187.5px;
@@ -110,7 +114,6 @@ export default {
 .right {
   display: flex;
   flex-direction: column;
-  text-overflow: ellipsis;
   justify-content: space-between;
   max-width: 700px;
   .row1 {
@@ -151,8 +154,10 @@ export default {
       margin-right: 15px;
     }
   }
-  .rwo6{
+  .row6 {
     text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     font-size: 13px;
   }
 }

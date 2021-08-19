@@ -29,7 +29,6 @@ export default {
     return {
       // 轮播图数据
       bannerData: [],
-      // 歌单数据
       musicList: [],
     };
   },
@@ -86,6 +85,7 @@ export default {
   margin-bottom: 0;
 }
 .musicItem {
+  flex-shrink: 0;
   width: 18%;
   margin: 0 2% 20px 0;
   overflow: hidden;

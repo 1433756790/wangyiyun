@@ -1,5 +1,6 @@
 <template>
   <div>
+    <audio :src="musicUrl" ref="audioPlayer" autoplay></audio>
     <div class="bottomCtrl">
       <div class="left">
         <el-avatar
@@ -48,18 +49,32 @@
 
 <script>
 export default {
+  watch: {
+    // 监听vuex中musicId的变化
+    "$store.state.musicId"(id) {
+      this.getMusicDetail(id);
+    },
+  },
   data() {
     return {
       leftImg: require("@/../public/img/test.jpg"),
       timeProgress: 0,
       volumeProgress: 0,
       drawer: false,
+      // 音乐url
+      musicUrl: "",
     };
   },
   methods: {
     // 音量变为0
     volumeDown() {
       this.volumeProgress = 0;
+    },
+    // 获取歌曲的url
+    async getMusicDetail(id) {
+      const { data: res } = await this.$http("/song/url", { id });
+      this.musicUrl = res.data[0].url;
+      console.log(this.musicUrl);
     },
   },
 };
