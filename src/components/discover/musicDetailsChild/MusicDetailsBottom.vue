@@ -63,6 +63,10 @@ export default {
     // 点击选中行
     clickRow(row) {
       this.$store.commit("updateMusicId", row.id);
+      this.$store.commit("updateAllPlayTime", row.dt);
+      if (!this.$store.state.isPlay) {
+        this.$store.commit("updatePlayState");
+      }
     },
   },
 };

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <audio :src="musicUrl" ref="audioPlayer" autoplay></audio>
+    <audio
+      :src="musicUrl"
+      ref="audioPlayer"
+      autoplay
+      @timeupdate="timeupdate"
+    ></audio>
     <div class="bottomCtrl">
       <div class="left">
         <el-avatar
@@ -14,21 +19,33 @@
         <div class="topButton">
           <i><font-awesome-icon icon="redo" class="fontasesome" /></i>
           <i><font-awesome-icon icon="step-backward" class="fontasesome" /></i>
-          <i><font-awesome-icon icon="play" class="fontasesome playBtn" /></i>
+          <div>
+            <i v-if="!this.$store.state.isPlay"
+              ><font-awesome-icon
+                icon="play"
+                class="fontasesome playBtn"
+                @click="playAudio"
+            /></i>
+            <i v-else
+              ><font-awesome-icon
+                :icon="['far', 'pause-circle']"
+                class="fontasesome playBtn"
+                @click="stopAudio"
+            /></i>
+          </div>
           <i><font-awesome-icon icon="step-forward" class="fontasesome" /></i>
           <i
             ><font-awesome-icon :icon="['far', 'heart']" class="fontasesome"
           /></i>
         </div>
         <div class="botttmSlider">
-          <span>00:00</span>
+          <span>{{ hasPlayTime | datefmt("mm:ss") }}</span>
           <el-slider
             v-model="timeProgress"
             :show-tooltip="false"
             class="progressSlider"
-            disabled
           ></el-slider>
-          <span>00:00</span>
+          <span>{{ allPlayTime | datefmt("mm:ss") }}</span>
         </div>
       </div>
       <div class="right">
@@ -50,10 +67,10 @@
 <script>
 export default {
   watch: {
-    // 监听vuex中musicId的变化
     "$store.state.musicId"(id) {
       this.getMusicDetail(id);
     },
+    "$store.state.isPlay"() {},
   },
   data() {
     return {
@@ -63,6 +80,10 @@ export default {
       drawer: false,
       // 音乐url
       musicUrl: "",
+      // 音乐总时长
+      allPlayTime: "0",
+      // 已经播放了多长时间
+      hasPlayTime: "0",
     };
   },
   methods: {
@@ -73,8 +94,28 @@ export default {
     // 获取歌曲的url
     async getMusicDetail(id) {
       const { data: res } = await this.$http("/song/url", { id });
+      this.allPlayTime = this.$store.state.allPlayTime;
       this.musicUrl = res.data[0].url;
-      console.log(this.musicUrl);
+    },
+    // 播放音乐
+    playAudio() {
+      this.$refs.audioPlayer.play();
+      this.$store.commit("updatePlayState");
+    },
+    // 暂停播放
+    stopAudio() {
+      this.$refs.audioPlayer.pause();
+      this.$store.commit("updatePlayState");
+    },
+    // 播放的时间变化
+    timeupdate() {
+      let time = Math.floor(this.$refs.audioPlayer.currentTime) * 1000;
+      if (time >= 1000) {
+        this.hasPlayTime = time;
+      }
+      this.timeProgress = Math.floor(
+        (time / 1000 / Math.floor(this.allPlayTime / 1000)) * 100
+      );
     },
   },
 };

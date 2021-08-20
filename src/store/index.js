@@ -11,7 +11,9 @@ const state = {
     // 音乐id
     musicId: '',
     // 音乐播放url
-    musicUrl: ''
+    musicUrl: '',
+    // 播放总时长
+    allPlayTime: 0
 }
 
 const store = new Vuex.Store({
@@ -24,6 +26,13 @@ const store = new Vuex.Store({
         // 更新音乐id
         updateMusicId(state, id) {
             state.musicId = id
+        },
+        // 更新音乐播放状态
+        updatePlayState(state) {
+            state.isPlay = !state.isPlay
+        },
+        updateAllPlayTime(state, dt) {
+            state.allPlayTime = dt
         }
     }
 })
