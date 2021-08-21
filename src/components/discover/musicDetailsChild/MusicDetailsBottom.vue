@@ -9,6 +9,7 @@
             style="width: 100%"
             :row-class-name="tabRowClassName"
             @row-dblclick="clickRow"
+            highlight-current-row
           >
             <el-table-column type="index" label="#" width="40">
             </el-table-column>
@@ -19,6 +20,7 @@
               prop="name"
               label="音乐标题"
               min-width="350"
+              style="color: #ec4141 !important"
             ></el-table-column>
             <el-table-column
               prop="ar[0].name"
@@ -62,8 +64,10 @@ export default {
     },
     // 点击选中行
     clickRow(row) {
-      this.$store.commit("updateMusicId", row.id);
-      this.$store.commit("updateAllPlayTime", row.dt);
+      if (this.$store.state.musicId !== row.id) {
+        this.$store.commit("updateMusicId", row.id);
+        this.$store.commit("updateAllPlayTime", row.dt);
+      }
       if (!this.$store.state.isPlay) {
         this.$store.commit("updatePlayState");
       }
@@ -108,5 +112,9 @@ export default {
 }
 /deep/ .el-table .el-table__row {
   cursor: pointer;
+}
+/deep/.el-table__body tr.current-row > td {
+  color: #fff;
+  background: rgba(90, 90, 90, 0.66) !important;
 }
 </style>

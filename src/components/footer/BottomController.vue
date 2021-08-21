@@ -28,7 +28,7 @@
             /></i>
             <i v-else
               ><font-awesome-icon
-                :icon="['far', 'pause-circle']"
+                icon="pause"
                 class="fontasesome playBtn"
                 @click="stopAudio"
             /></i>
@@ -44,6 +44,7 @@
             v-model="timeProgress"
             :show-tooltip="false"
             class="progressSlider"
+            @change="changePlayProgress"
           ></el-slider>
           <span>{{ allPlayTime | datefmt("mm:ss") }}</span>
         </div>
@@ -54,6 +55,7 @@
           v-model="volumeProgress"
           :show-tooltip="false"
           class="volumeProgress"
+          @input="changeVolume"
         ></el-slider>
         <i class="el-icon-s-unfold" @click="drawer = !drawer"></i>
       </div>
@@ -76,7 +78,7 @@ export default {
     return {
       leftImg: require("@/../public/img/test.jpg"),
       timeProgress: 0,
-      volumeProgress: 0,
+      volumeProgress: 30,
       drawer: false,
       // 音乐url
       musicUrl: "",
@@ -94,11 +96,15 @@ export default {
     // 获取歌曲的url
     async getMusicDetail(id) {
       const { data: res } = await this.$http("/song/url", { id });
+      this.$refs.audioPlayer.volume = this.volumeProgress / 100;
+      console.log(this.$refs.audioPlayer.volume);
+      this.hasPlayTime = "0";
       this.allPlayTime = this.$store.state.allPlayTime;
       this.musicUrl = res.data[0].url;
     },
     // 播放音乐
     playAudio() {
+      if (!this.musicUrl) return;
       this.$refs.audioPlayer.play();
       this.$store.commit("updatePlayState");
     },
@@ -116,6 +122,15 @@ export default {
       this.timeProgress = Math.floor(
         (time / 1000 / Math.floor(this.allPlayTime / 1000)) * 100
       );
+    },
+    // 改变声音大小
+    changeVolume(e) {
+      this.$refs.audioPlayer.volume = e / 100;
+    },
+    // 改变歌曲的播放进度
+    changePlayProgress(time) {
+      let changeTime = Math.floor(((time / 100) * this.allPlayTime) / 1000);
+      this.$refs.audioPlayer.currentTime = changeTime;
     },
   },
 };
