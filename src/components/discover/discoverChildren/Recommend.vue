@@ -46,7 +46,6 @@ export default {
     async getMusicList() {
       const { data: res } = await this.$http("/personalized", { limit: 10 });
       this.musicList = res.result;
-      console.log(res);
     },
     // 跳转到歌单详情
     pushMusicDetails(id) {

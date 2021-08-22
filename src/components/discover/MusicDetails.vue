@@ -51,7 +51,10 @@
         </div>
       </div>
       <div class="bottom">
-        <music-details-bottom :musicList="musicList"></music-details-bottom>
+        <music-details-bottom
+          :musicList="musicList"
+          :listDetailsData="listDetailsData"
+        ></music-details-bottom>
       </div>
     </div>
   </div>

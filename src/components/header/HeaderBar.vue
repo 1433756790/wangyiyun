@@ -8,13 +8,34 @@
           <span><i class="el-icon-arrow-left" @click="pushPage(-1)"></i></span>
           <span><i class="el-icon-arrow-right" @click="pushPage(1)"></i></span>
         </div>
-        <!-- 输入框 -->
-        <el-input
-          placeholder="请输入内容"
-          prefix-icon="el-icon-search"
-          v-model="searchInput"
+        <!-- 输入框弹窗 -->
+        <el-popover
+          placement="bottom"
+          width="350"
+          trigger="focus"
+          :visible-arrow="false"
+          popper-class="inputPopover"
         >
-        </el-input>
+          <!-- 热搜作品榜 -->
+          <div class="hot">热搜榜</div>
+          <el-table :data="hotList" style="width: 100%" :show-header="false">
+            <el-table-column type="index"></el-table-column>
+            <el-table-column>
+              <template slot-scope="scoped">
+                <div class="name">{{ scoped.row.searchWord }}</div>
+                <div class="description">{{ scoped.row.content }}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 输入框 -->
+          <el-input
+            placeholder="请输入内容"
+            prefix-icon="el-icon-search"
+            v-model="searchInput"
+            slot="reference"
+          >
+          </el-input>
+        </el-popover>
       </div>
       <div class="right">
         <div>
@@ -92,6 +113,8 @@ export default {
       isPopoverShow: false,
       // 用户信息
       userInfo: {},
+      // 热搜作品榜
+      hotList: [],
     };
   },
   methods: {
@@ -135,14 +158,22 @@ export default {
     pushPage(a) {
       this.$router.go(a);
     },
+    // 获取热搜作品榜
+    async getHotList() {
+      const { data: res } = await this.$http("/search/hot/detail");
+      this.hotList = res.data;
+    },
   },
   created() {
     this.isLogin();
+    this.getHotList();
   },
 };
 </script>
 
+
 <style lang="less" scoped>
+@import "./headerCss/HeaderCss.css";
 .header {
   height: 64px !important;
   width: 100%;
@@ -223,5 +254,9 @@ export default {
 }
 .loginOut {
   transform: translateX(115px);
+}
+.hot {
+  font-size: 18px;
+  margin-left: 13px;
 }
 </style>

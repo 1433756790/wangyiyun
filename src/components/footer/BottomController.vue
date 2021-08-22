@@ -71,6 +71,7 @@ export default {
   watch: {
     "$store.state.musicId"(id) {
       this.getMusicDetail(id);
+      this.leftImg = this.$store.state.playMusicMessage.al.picUrl;
     },
     "$store.state.isPlay"() {},
   },
@@ -97,7 +98,6 @@ export default {
     async getMusicDetail(id) {
       const { data: res } = await this.$http("/song/url", { id });
       this.$refs.audioPlayer.volume = this.volumeProgress / 100;
-      console.log(this.$refs.audioPlayer.volume);
       this.hasPlayTime = "0";
       this.allPlayTime = this.$store.state.allPlayTime;
       this.musicUrl = res.data[0].url;

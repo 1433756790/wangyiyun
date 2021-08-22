@@ -1,0 +1,14 @@
+.inputPopover{
+    transform: translateY(-10px);
+    height: 400px;
+    overflow: auto;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.inputPopover .el-table td,
+.el-table th.is-leaf {
+  border: none;
+}
+.inputPopover .el-table thead{
+    cursor: pointer;
+}

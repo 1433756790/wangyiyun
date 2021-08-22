@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  props: ["musicList"],
+  props: ["musicList", "listDetailsData"],
   data() {
     return {
       activeName: "musicList",
@@ -64,8 +64,15 @@ export default {
     },
     // 点击选中行
     clickRow(row) {
+      // console.log(row);
+      if (
+        this.$store.state.musicDetailsList.id !== this.listDetailsData.id ||
+        this.$store.state.musicDetailsList === ""
+      ) {
+        this.$store.commit("updateMusicList", this.listDetailsData);
+      }
       if (this.$store.state.musicId !== row.id) {
-        this.$store.commit("updateMusicId", row.id);
+        this.$store.commit("updateMusicId", row);
         this.$store.commit("updateAllPlayTime", row.dt);
       }
       if (!this.$store.state.isPlay) {
