@@ -10,6 +10,7 @@
             :row-class-name="tabRowClassName"
             @row-dblclick="clickRow"
             highlight-current-row
+            ref="musicTable"
           >
             <el-table-column type="index" label="#" width="40">
             </el-table-column>
@@ -48,6 +49,11 @@
 
 <script>
 export default {
+  watch: {
+    "$store.state.playIndex"(index) {
+      this.$refs.musicTable.setCurrentRow(this.musicList[index]);
+    },
+  },
   props: ["musicList", "listDetailsData"],
   data() {
     return {
@@ -57,6 +63,7 @@ export default {
   methods: {
     //自定义斑马纹
     tabRowClassName({ row, rowIndex }) {
+      row.index = rowIndex;
       let index = rowIndex + 1;
       if (index % 2 == 1) {
         return "warning-row";
@@ -64,7 +71,6 @@ export default {
     },
     // 点击选中行
     clickRow(row) {
-      // console.log(row);
       if (
         this.$store.state.musicDetailsList.id !== this.listDetailsData.id ||
         this.$store.state.musicDetailsList === ""
@@ -72,6 +78,7 @@ export default {
         this.$store.commit("updateMusicList", this.listDetailsData);
       }
       if (this.$store.state.musicId !== row.id) {
+        this.$store.commit("updateMusicIndex", row.index);
         this.$store.commit("updateMusicId", row);
         this.$store.commit("updateAllPlayTime", row.dt);
       }

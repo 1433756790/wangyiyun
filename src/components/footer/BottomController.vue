@@ -5,6 +5,7 @@
       ref="audioPlayer"
       autoplay
       @timeupdate="timeupdate"
+      @ended="changeMusic('next')"
     ></audio>
     <div class="bottomCtrl">
       <div class="left">
@@ -33,7 +34,7 @@
                 @click="stopAudio"
             /></i>
           </div>
-          <i><font-awesome-icon icon="step-forward" class="fontasesome" /></i>
+          <i><font-awesome-icon icon="step-forward" class="fontasesome" @click="changeMusic('next')"/></i>
           <i
             ><font-awesome-icon :icon="['far', 'heart']" class="fontasesome"
           /></i>
@@ -131,6 +132,17 @@ export default {
     changePlayProgress(time) {
       let changeTime = Math.floor(((time / 100) * this.allPlayTime) / 1000);
       this.$refs.audioPlayer.currentTime = changeTime;
+    },
+    // 切换歌曲
+    changeMusic(type) {
+      if (type === "next") {
+        this.$store.commit("updateMusicIndex", this.$store.state.playIndex + 1);
+        let newRow = this.$store.state.musicDetailsList.tracks[
+          this.$store.state.playIndex
+        ];
+        this.$store.commit("updateMusicId", newRow);
+        this.$store.commit("updateAllPlayTime", newRow.dt);
+      }
     },
   },
 };

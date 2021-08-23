@@ -19,7 +19,7 @@ const state = {
     // 正在播放歌曲的信息
     playMusicMessage: {},
     // 播放音乐的索引
-    playIndex: ''
+    playIndex: -1
 }
 
 const store = new Vuex.Store({
@@ -33,12 +33,14 @@ const store = new Vuex.Store({
         updateMusicId(state, row) {
             state.musicId = row.id
             state.playMusicMessage = row
-            // console.log(state.playMusicMessage)
+            console.log(row.id)
+            console.log(state.playMusicMessage)
         },
         // 更新音乐播放状态
         updatePlayState(state) {
             state.isPlay = !state.isPlay
         },
+        // 更新音乐播放总长
         updateAllPlayTime(state, dt) {
             state.allPlayTime = dt
         },
@@ -46,6 +48,11 @@ const store = new Vuex.Store({
         updateMusicList(state, musicDetailsList) {
             state.musicDetailsList = musicDetailsList
             // console.log(state.musicDetailsList)
+        },
+        // 更新歌单索引
+        updateMusicIndex(state, index) {
+            state.playIndex = index
+            // console.log(index)
         }
     }
 })
