@@ -33,8 +33,8 @@ const store = new Vuex.Store({
         updateMusicId(state, row) {
             state.musicId = row.id
             state.playMusicMessage = row
-            console.log(row.id)
-            console.log(state.playMusicMessage)
+            // console.log(row.id)
+            // console.log(state.playMusicMessage)
         },
         // 更新音乐播放状态
         updatePlayState(state) {

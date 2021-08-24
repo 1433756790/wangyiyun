@@ -114,9 +114,14 @@
 .el-drawer__container {
   height: calc(100vh - 66px) !important;
 }
+.el-drawer.rtl{
+  width: 370px !important;
+}
+
 .el-drawer__wrapper{
   bottom: auto !important;
 }
+
 
 
  

@@ -19,7 +19,13 @@
       <div class="center">
         <div class="topButton">
           <i><font-awesome-icon icon="redo" class="fontasesome" /></i>
-          <i><font-awesome-icon icon="step-backward" class="fontasesome" /></i>
+          <i>
+            <font-awesome-icon
+              icon="step-backward"
+              class="fontasesome"
+              @click="changeMusic('previous')"
+            />
+          </i>
           <div>
             <i v-if="!this.$store.state.isPlay"
               ><font-awesome-icon
@@ -34,7 +40,12 @@
                 @click="stopAudio"
             /></i>
           </div>
-          <i><font-awesome-icon icon="step-forward" class="fontasesome" @click="changeMusic('next')"/></i>
+          <i
+            ><font-awesome-icon
+              icon="step-forward"
+              class="fontasesome"
+              @click="changeMusic('next')"
+          /></i>
           <i
             ><font-awesome-icon :icon="['far', 'heart']" class="fontasesome"
           /></i>
@@ -60,8 +71,24 @@
         ></el-slider>
         <i class="el-icon-s-unfold" @click="drawer = !drawer"></i>
       </div>
-      <el-drawer title="我是标题" :visible.sync="drawer" width="25%">
-        <span>我来啦!</span>
+      <el-drawer :visible.sync="drawer" width="24%" :show-close="false">
+        <template slot="title">
+          <span>共{{ musicListLength }}首</span>
+        </template>
+        <el-table
+          :data="musicList"
+          style="width: 100%"
+          :show-header="false"
+          :row-class-name="tabRowClassName"
+        >
+          <el-table-column prop="name" min-width="150px"></el-table-column>
+          <el-table-column prop="ar[0].name"></el-table-column>
+          <el-table-column>
+            <template scope="scoped">
+              {{ scoped.row.dt | datefmt("mm:ss") }}
+            </template>
+          </el-table-column>
+        </el-table>
       </el-drawer>
     </div>
   </div>
@@ -75,6 +102,10 @@ export default {
       this.leftImg = this.$store.state.playMusicMessage.al.picUrl;
     },
     "$store.state.isPlay"() {},
+    "$store.state.musicDetailsList"(list) {
+      this.musicListLength = list.tracks.length;
+      this.musicList = list.tracks;
+    },
   },
   data() {
     return {
@@ -88,6 +119,10 @@ export default {
       allPlayTime: "0",
       // 已经播放了多长时间
       hasPlayTime: "0",
+      // 播放歌单的长度
+      musicListLength: 0,
+      // 播放的歌单
+      musicList: [],
     };
   },
   methods: {
@@ -135,13 +170,22 @@ export default {
     },
     // 切换歌曲
     changeMusic(type) {
-      if (type === "next") {
-        this.$store.commit("updateMusicIndex", this.$store.state.playIndex + 1);
-        let newRow = this.$store.state.musicDetailsList.tracks[
-          this.$store.state.playIndex
-        ];
-        this.$store.commit("updateMusicId", newRow);
-        this.$store.commit("updateAllPlayTime", newRow.dt);
+      let a = type === "next" ? 1 : -1;
+      if (a == -1 && this.$store.state.playIndex === 0) {
+        return;
+      }
+      this.$store.commit("updateMusicIndex", this.$store.state.playIndex + a);
+      let newRow = this.$store.state.musicDetailsList.tracks[
+        this.$store.state.playIndex
+      ];
+      this.$store.commit("updateMusicId", newRow);
+      this.$store.commit("updateAllPlayTime", newRow.dt);
+    },
+    //自定义斑马纹
+    tabRowClassName({ row, rowIndex }) {
+      let index = rowIndex + 1;
+      if (index % 2 == 1) {
+        return "warning-row";
       }
     },
   },
@@ -214,5 +258,26 @@ export default {
 .volumeProgress {
   width: 80px;
   margin-left: 3px;
+}
+/deep/ .el-drawer .el-drawer__header {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+/deep/.el-table .cell {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/deep/ .el-table td,
+.el-table th {
+  padding: 9px 0;
+}
+/deep/ .el-table td,
+.el-table th.is-leaf {
+  border-bottom: none;
+}
+/deep/ .el-table .warning-row {
+  background: #f9f9f9;
 }
 </style>>
