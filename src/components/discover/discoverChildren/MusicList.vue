@@ -11,17 +11,19 @@
           trigger="click"
           :offset="80"
           popper-class="categoriesPopover"
+          v-model="isCategories"
         >
           <div class="categories">
             <div
               v-for="(item, index) in categoriesList"
               :key="index"
               class="cateItem"
+              @click="swithTag(item.name)"
             >
               <span>{{ item.name }}</span>
             </div>
           </div>
-          <el-button slot="reference" size="medium">选择分类</el-button>
+          <el-button size="medium" slot="reference">选择分类</el-button>
         </el-popover>
       </div>
     </div>
@@ -32,10 +34,19 @@
           v-for="(item, index) in musicList"
           :key="index"
         >
-          <img :src="item.coverImgUrl" />
+          <img :src="item.coverImgUrl" @click="pushMusicDetails(item.id)" />
           <div class="musicDescribe">{{ item.name }}</div>
         </div>
       </div>
+      <!-- 分页 -->
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="total"
+        :page-size="50"
+        @current-change="pageChange"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -52,9 +63,13 @@ export default {
       // 歌单列表
       musicList: [],
       total: 0,
+      isCategories: false,
     };
   },
   created() {
+    if (window.sessionStorage.getItem("currentTag")) {
+      this.currentTag = window.sessionStorage.getItem("currentTag");
+    }
     this.getCategoriesList();
     this.getMusicSheetList();
   },
@@ -72,8 +87,34 @@ export default {
       });
       this.musicList = res.playlists;
       this.total = res.total;
-      console.log(this.musicList);
+      // console.log(this.musicList);
     },
+    // 切换标签
+    swithTag(tag) {
+      this.isCategories = !this.isCategories;
+      if (this.currentTag === tag) return;
+      this.currentTag = tag;
+      window.sessionStorage.setItem("currentTag", this.currentTag);
+      // console.log(tag);
+      this.getMusicSheetList();
+    },
+    // 翻页
+    pageChange(page) {
+      this.currentPage = page;
+      this.$router.push({
+        name: "MusicList",
+        query: { offest: 50 * (this.currentPage - 1) },
+      });
+      this.getMusicSheetList();
+    },
+    // 跳转到歌单详情
+    pushMusicDetails(id) {
+      this.$router.push({ name: "musicDetails", params: { id } });
+    },
+  },
+  watch: {
+    // currentPage:function(){
+    // }
   },
 };
 </script>
@@ -120,5 +161,9 @@ export default {
 .playlistItem img {
   width: 100%;
   border-radius: 10px;
+}
+/deep/.el-pagination {
+  margin: 10px 0;
+  text-align: center;
 }
 </style>>

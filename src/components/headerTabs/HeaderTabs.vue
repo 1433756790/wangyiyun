@@ -2,7 +2,7 @@
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="/discover/recommend"></el-tab-pane>
-      <el-tab-pane label="歌单" name="/discover/musciclist"></el-tab-pane>
+      <el-tab-pane label="歌单" name="/discover/musciclist/"></el-tab-pane>
       <el-tab-pane label="排行榜" name="/discover/ranking"></el-tab-pane>
       <el-tab-pane label="歌手" name="/discover/singer"></el-tab-pane>
     </el-tabs>

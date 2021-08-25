@@ -26,7 +26,7 @@ const routes = [
         children: [
           { path: '/discover/recommend', component: Recommend },
           { path: '/discover/singer', component: Singer },
-          { path: '/discover/musciclist', component: MusicList },
+          { path: '/discover/musciclist/:offest(.?)', component: MusicList, name: 'MusicList' },
           { path: '/discover/ranking', component: Ranking },
         ]
       },
