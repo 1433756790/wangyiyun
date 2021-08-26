@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="containerWrap">
     <div class="top">
       <div class="right">
         <span style="margin-right: 10px; font-size: 24px; font-weight: 500">{{
@@ -45,14 +45,19 @@
         :total="total"
         :page-size="50"
         @current-change="pageChange"
+        :current-page="currentPage"
       >
       </el-pagination>
     </div>
+    <el-backtop target=".el-main" :visibility-height="300" :bottom="100" :right="10"> </el-backtop>
+  </div>
+</template>
   </div>
 </template>
 
 <script>
 export default {
+  inject: ["reload"],
   data() {
     return {
       // 歌单分类
@@ -69,6 +74,9 @@ export default {
   created() {
     if (window.sessionStorage.getItem("currentTag")) {
       this.currentTag = window.sessionStorage.getItem("currentTag");
+    }
+    if (window.sessionStorage.getItem("currentPage")) {
+      this.currentPage = parseInt(window.sessionStorage.getItem("currentPage"));
     }
     this.getCategoriesList();
     this.getMusicSheetList();
@@ -91,21 +99,25 @@ export default {
     },
     // 切换标签
     swithTag(tag) {
+      if (window.sessionStorage.getItem("currentPage")) {
+        this.currentPage = 1;
+        window.sessionStorage.setItem("currentPage", this.currentPage);
+      }
       this.isCategories = !this.isCategories;
       if (this.currentTag === tag) return;
       this.currentTag = tag;
       window.sessionStorage.setItem("currentTag", this.currentTag);
-      // console.log(tag);
       this.getMusicSheetList();
     },
     // 翻页
     pageChange(page) {
       this.currentPage = page;
+      window.sessionStorage.setItem("currentPage", this.currentPage);
       this.$router.push({
         name: "MusicList",
         query: { offest: 50 * (this.currentPage - 1) },
       });
-      this.getMusicSheetList();
+      // this.getMusicSheetList();
     },
     // 跳转到歌单详情
     pushMusicDetails(id) {
@@ -113,8 +125,9 @@ export default {
     },
   },
   watch: {
-    // currentPage:function(){
-    // }
+    $route() {
+      this.reload();
+    },
   },
 };
 </script>
