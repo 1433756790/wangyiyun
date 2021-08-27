@@ -7,40 +7,77 @@
           v-for="(item, index) in languageType"
           :key="index"
           class="typeItem"
+          :class="index == activeNum1 ? 'typeItem_active' : ''"
+          @click="switchLanguage(index)"
         >
           {{ item.name }}
         </div>
       </div>
       <div class="typeSort itemWrap">
         <span style="margin-right: 20px; color: #666666">分类:</span>
-        <div v-for="(item, index) in typeSort" :key="index" class="typeItem">
+        <div
+          v-for="(item, index) in typeSort"
+          :key="index"
+          class="typeItem"
+          :class="index == activeNum2 ? 'typeItem_active' : ''"
+          @click="switchType(index)"
+        >
           {{ item.name }}
         </div>
       </div>
       <div class="initialSort">
-        <span style="margin-right: 20px; color: #666666">筛选:</span>
+        <span style="margin-right: 20px; color: #666666; margin-top: 4px"
+          >筛选:</span
+        >
         <span class="initialWrap">
           <div
             v-for="(item, index) in initialSort"
             :key="index"
             class="typeItem initial"
+            :class="index == activeNum3 ? 'typeItem_active' : ''"
+            @click="switchSort(index)"
           >
             {{ item.name }}
           </div>
         </span>
       </div>
     </div>
-    <div class="artistCard">
+    <!-- <div
+      class="artistCard"
+      v-infinite-scroll="load"
+      :infinite-scroll-disabled="disabled"
+      :infinite-scroll-distance="100"
+      :infinite-scroll-immediate="false"
+    >
       <div v-for="(item, index) in artists" :key="index" class="artistItem">
-        <img :src="item.img1v1Url" alt="" />
+        <img :src="item.img1v1Url || item.picUrl" />
         <div style="margin-top: 10px">{{ item.name }}</div>
       </div>
+    </div> -->
+    <div class="listCardContainer">
+      <!-- 歌手列表 -->
+      <list-card
+        class="listCard"
+        :listCardData="artists"
+        isLoad
+        @bottomLoad="bottomLoad"
+        @clickListCardItem="clickListCardItem"
+      ></list-card>
     </div>
+    <el-backtop
+      target=".el-main"
+      :visibility-height="300"
+      :bottom="100"
+      :right="10"
+    >
+    </el-backtop>
   </div>
 </template>
 
 <script>
+import ListCard from "../../listCard/ListCard.vue";
 export default {
+  components: { ListCard },
   data() {
     return {
       languageType: [
@@ -93,9 +130,13 @@ export default {
       initial: -1,
       // 当前所在页数
       currentPage: 1,
-      singerList: [],
       // 是否还有更多数据
       isMore: false,
+      // 无限滚动是否可用
+      disabled: false,
+      activeNum1: 0,
+      activeNum2: 0,
+      activeNum3: 0,
     };
   },
   created() {
@@ -104,16 +145,50 @@ export default {
   methods: {
     async getArtistList() {
       const { data: res } = await this.$http("/artist/list", {
+        limit: 30,
         type: this.type,
         area: this.area,
         initial: this.initial,
         offset: (this.currentPage - 1) * 30,
       });
       this.artists.push(...res.artists);
-      console.log(res);
       this.isMore = res.more;
     },
+
+    bottomLoad() {
+      // console.log("bottomLoad");
+      // 如果还有更多数据 则发送请求 将数据 push到数组
+      if (this.isMore == true) {
+        this.currentPage += 1;
+        this.getArtistList();
+      }
+    },
+    // 点击歌手
+    clickListCardItem(id) {
+      // this.$router.push({ name: "musicDetails", params: { id } });
+      console.log(id);
+    },
+    // 选择语种
+    switchLanguage(index) {
+      this.activeNum1 = index;
+      this.area = this.languageType[index].area;
+      this.artists = [];
+      this.getArtistList();
+    },
+    switchType(index) {
+      this.activeNum2 = index;
+      this.type = this.typeSort[index].type;
+      this.artists = [];
+      this.getArtistList();
+    },
+    switchSort(index) {
+      this.activeNum3 = index;
+      this.initial = this.initialSort[index].initial;
+      this.artists = [];
+      this.getArtistList();
+    },
   },
+  watch: {},
 };
 </script>
 
@@ -166,8 +241,14 @@ export default {
     cursor: pointer;
     img {
       width: 100%;
+      height: 100%;
       border-radius: 10px;
     }
   }
+}
+.listCardContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>>
