@@ -165,8 +165,7 @@ export default {
     },
     // 点击歌手
     clickListCardItem(id) {
-      // this.$router.push({ name: "musicDetails", params: { id } });
-      console.log(id);
+      this.$router.push({ name: "SingerDetails", params: { id } });
     },
     // 选择语种
     switchLanguage(index) {

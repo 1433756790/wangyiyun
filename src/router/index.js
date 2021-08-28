@@ -7,6 +7,7 @@ import Singer from '../components/discover/discoverChildren/Singer'
 import Ranking from '../components/discover/discoverChildren/Ranking'
 import MusicList from '../components/discover/discoverChildren/MusicList'
 import MusicDetails from '../components/discover/MusicDetails'
+import SingerDetails from '../components/singerDetails/SingerDetails'
 
 
 Vue.use(VueRouter)
@@ -31,6 +32,7 @@ const routes = [
         ]
       },
       { path: '/musicDetails/:id', component: MusicDetails, name: 'musicDetails' },
+      { path: 'singerDetails/:id', component: SingerDetails, name: 'SingerDetails' }
     ]
   },
 ]
