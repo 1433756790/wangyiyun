@@ -75,7 +75,7 @@ export default {
         this.$store.state.musicDetailsList.id !== this.listDetailsData.id ||
         this.$store.state.musicDetailsList === ""
       ) {
-        this.$store.commit("updateMusicList", this.listDetailsData);
+        this.$store.commit("updateMusicList", this.listDetailsData.tracks);
       }
       if (this.$store.state.musicId !== row.id) {
         this.$store.commit("updateMusicIndex", row.index);

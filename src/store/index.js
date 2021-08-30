@@ -15,11 +15,12 @@ const state = {
     // 播放总时长
     allPlayTime: 0,
     // 正在播放的歌单
-    musicDetailsList: {},
+    musicDetailsList: [],
     // 正在播放歌曲的信息
     playMusicMessage: {},
     // 播放音乐的索引
-    playIndex: -1
+    playIndex: -1,
+    
 }
 
 const store = new Vuex.Store({
@@ -54,6 +55,8 @@ const store = new Vuex.Store({
             state.playIndex = index
             // console.log(index)
         }
+       
+        
     }
 })
 

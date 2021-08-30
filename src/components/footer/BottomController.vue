@@ -103,8 +103,8 @@ export default {
     },
     "$store.state.isPlay"() {},
     "$store.state.musicDetailsList"(list) {
-      this.musicListLength = list.tracks.length;
-      this.musicList = list.tracks;
+      this.musicListLength = list.length;
+      this.musicList = list;
     },
   },
   data() {
@@ -175,7 +175,7 @@ export default {
         return;
       }
       this.$store.commit("updateMusicIndex", this.$store.state.playIndex + a);
-      let newRow = this.$store.state.musicDetailsList.tracks[
+      let newRow = this.$store.state.musicDetailsList[
         this.$store.state.playIndex
       ];
       this.$store.commit("updateMusicId", newRow);

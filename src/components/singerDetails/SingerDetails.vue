@@ -23,23 +23,37 @@
       </div>
     </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="专辑" name="1"></el-tab-pane>
+      <el-tab-pane label="专辑" name="1">
+        <album-list
+          v-if="flag"
+          :singerAlbumList="singerAlbumList"
+          :singerAlbum="singerAlbum"
+        ></album-list>
+      </el-tab-pane>
       <el-tab-pane label="MV" name="2"></el-tab-pane>
-      <el-tab-pane label="歌手详情" name="3"></el-tab-pane>
+      <el-tab-pane label="歌手详情" name="3">
+        <div class="briefDesc">{{ singerInfo.briefDesc }}</div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+import AlbumList from "../album/AlbumList.vue";
 export default {
+  components: { AlbumList },
   data() {
     return {
       singerInfo: [],
       activeName: "1",
+      singerAlbumList: [],
+      singerAlbum: [],
+      flag: false,
     };
   },
   created() {
     this.getSingerInfo();
+    this.getSingerAlbumList();
   },
   methods: {
     //获取歌手详情
@@ -47,10 +61,30 @@ export default {
       const { data: res } = await this.$http("/artist/detail", {
         id: this.$route.params.id,
       });
-      console.log(res);
+      // console.log(res);
       this.singerInfo = res.data.artist;
     },
     handleClick(tab, event) {},
+    // 获取歌手专辑
+    async getSingerAlbumList() {
+      const { data: res } = await this.$http("/artist/album", {
+        id: this.$route.params.id,
+        limit: 50,
+      });
+      this.singerAlbumList = res.hotAlbums;
+      await res.hotAlbums.forEach((element) => {
+        this.getAlbumItemData(element.id);
+      });
+      this.flag = true;
+    },
+    // 获取专辑内容
+    async getAlbumItemData(id) {
+      const { data: res } = await this.$http("/album", {
+        id: id,
+      });
+      let songs = res.songs;
+      this.singerAlbum.push(songs);
+    },
   },
 };
 </script>
@@ -112,5 +146,12 @@ export default {
   color: black;
   font-size: 15px;
   font-weight: 600;
+}
+.briefDesc {
+  font-size: 16px;
+  color: #373737;
+  text-indent: 1cm;
+  letter-spacing: 0.5px;
+  line-height: 30px;
 }
 </style>
