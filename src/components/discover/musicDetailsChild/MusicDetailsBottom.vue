@@ -6,7 +6,7 @@
           <!-- 歌曲列表 -->
           <el-table
             :data="musicList"
-            style="width: 100%"
+            style="width: 100%; margin-bottom: 20px"
             :row-class-name="tabRowClassName"
             @row-dblclick="clickRow"
             highlight-current-row

@@ -45,10 +45,18 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      newSingerAlbum: [],
+    };
   },
-  watch: {},
-  created() {},
+  watch: {
+    // singerAlbum(newVal) {
+    //   this.newSingerAlbum = newVal;
+    // },
+  },
+  created() {
+    console.log(this.singerAlbum)
+  },
   methods: {
     //自定义斑马纹
     tabRowClassName({ row, rowIndex }) {

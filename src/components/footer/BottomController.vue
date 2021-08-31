@@ -137,6 +137,7 @@ export default {
       this.hasPlayTime = "0";
       this.allPlayTime = this.$store.state.allPlayTime;
       this.musicUrl = res.data[0].url;
+      console.log(this.musicUrl)
     },
     // 播放音乐
     playAudio() {

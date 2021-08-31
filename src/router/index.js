@@ -8,7 +8,9 @@ import Ranking from '../components/discover/discoverChildren/Ranking'
 import MusicList from '../components/discover/discoverChildren/MusicList'
 import MusicDetails from '../components/discover/MusicDetails'
 import SingerDetails from '../components/singerDetails/SingerDetails'
-
+const Video = () => import('../components/video/Video.vue')
+const VideoList = () => import('../components/video/VideoList.vue')
+const MVList = () => import('../components/video/MVList.vue')
 
 Vue.use(VueRouter)
 
@@ -32,7 +34,18 @@ const routes = [
         ]
       },
       { path: '/musicDetails/:id', component: MusicDetails, name: 'musicDetails' },
-      { path: 'singerDetails/:id', component: SingerDetails, name: 'SingerDetails' }
+      { path: '/singerDetails/:id', component: SingerDetails, name: 'SingerDetails' },
+      {
+        path: '/video',
+        component: Video,
+        name: 'Video',
+        redirect: '/video/videoList',
+        children: [
+          { path: '/video/videoList', component: VideoList },
+          { path: '/video/mvList', component: MVList },
+
+        ]
+      }
     ]
   },
 ]

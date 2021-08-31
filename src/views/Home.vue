@@ -12,11 +12,11 @@
             class="el-menu-vertical-demo"
             active-text-color="#000000"
           >
-            <el-menu-item index="2">
+            <el-menu-item index="2" @click="pushRouter('/discover')">
               <i><font-awesome-icon icon="music" /></i>
               <span slot="title">发现音乐</span>
             </el-menu-item>
-            <el-menu-item index="3">
+            <el-menu-item index="3" @click="pushRouter('/video')">
               <i><font-awesome-icon :icon="['fab', 'youtube']" /></i>
               <span slot="title">视频</span>
             </el-menu-item>
@@ -49,6 +49,11 @@ export default {
     HeaderBar,
     BottomController,
   },
+  methods: {
+    pushRouter(route) {
+      this.$router.push(route);
+    },
+  },
 };
 </script>
 
@@ -64,7 +69,7 @@ export default {
     height: calc(100vh - 131px);
     border-right: 1px solid #ccc;
   }
-  .el-container{
+  .el-container {
     height: 100%;
   }
 }

@@ -92,6 +92,7 @@ export default {
 .image img {
   width: 100%;
   border-radius: 10px;
+  height: 100%;
 }
 
 .title {

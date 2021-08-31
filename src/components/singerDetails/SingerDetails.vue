@@ -35,6 +35,13 @@
         <div class="briefDesc">{{ singerInfo.briefDesc }}</div>
       </el-tab-pane>
     </el-tabs>
+    <el-backtop
+      target=".el-main"
+      :visibility-height="300"
+      :bottom="100"
+      :right="10"
+    >
+    </el-backtop>
   </div>
 </template>
 
@@ -71,10 +78,11 @@ export default {
         id: this.$route.params.id,
         limit: 50,
       });
-      this.singerAlbumList = res.hotAlbums;
-      await res.hotAlbums.forEach((element) => {
+      // this.singerAlbumList = res.hotAlbums;
+      res.hotAlbums.forEach((element) => {
         this.getAlbumItemData(element.id);
       });
+
       this.flag = true;
     },
     // 获取专辑内容
@@ -82,8 +90,11 @@ export default {
       const { data: res } = await this.$http("/album", {
         id: id,
       });
+
       let songs = res.songs;
+      this.singerAlbumList.push(res.album);
       this.singerAlbum.push(songs);
+      // console.log(songs)
     },
   },
 };
