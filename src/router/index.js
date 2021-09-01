@@ -11,6 +11,7 @@ import SingerDetails from '../components/singerDetails/SingerDetails'
 const Video = () => import('../components/video/Video.vue')
 const VideoList = () => import('../components/video/VideoList.vue')
 const MVList = () => import('../components/video/MVList.vue')
+const VideoDetails = () => import('../components/video/VideoDetails.vue')
 
 Vue.use(VueRouter)
 
@@ -45,7 +46,8 @@ const routes = [
           { path: '/video/mvList', component: MVList },
 
         ]
-      }
+      },
+      { path: '/videoDetails/:id', component: VideoDetails, name: 'VideoDetails' },
     ]
   },
 ]

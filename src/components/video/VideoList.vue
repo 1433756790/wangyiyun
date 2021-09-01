@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-infinite-scroll="load"
-    :infinite-scroll-disabled="disabled"
-    :infinite-scroll-distance="300"
-    :infinite-scroll-immediate="false"
-  >
+  <div>
     <div class="top">
       <el-popover
         placement="bottom"
@@ -30,18 +25,41 @@
         ></el-button>
       </el-popover>
     </div>
-    <div class="bottom">
+    <div
+      class="bottom"
+      v-infinite-scroll="load"
+      :infinite-scroll-disabled="disabled"
+      :infinite-scroll-distance="100"
+      :infinite-scroll-immediate="false"
+    >
       <div class="wrap">
         <div
           class="playlistItem"
           v-for="(item, index) in videoList"
           :key="index"
         >
-          <img :src="item.data.coverUrl" />
+          <div class="videoImgWrap" @click="goVideoDetails(item.data.vid)">
+            <img :src="item.data.coverUrl" />
+            <div class="playTime">
+              <i class="el-icon-video-play"
+                >{{ item.data.playTime | playcountfmt }}万</i
+              >
+            </div>
+            <div class="durationmsTime">
+              {{ item.data.durationms | datefmt("mm:ss") }}
+            </div>
+          </div>
           <div>{{ item.data.title }}</div>
         </div>
       </div>
     </div>
+    <el-backtop
+      target=".el-main"
+      :visibility-height="300"
+      :bottom="100"
+      :right="10"
+    >
+    </el-backtop>
   </div>
 </template>
 
@@ -77,7 +95,6 @@ export default {
       this.sortList = res.data;
       this.currentTag = res.data[0];
       this.getVideoList(this.currentTag.id);
-      console.log(res);
     },
     swithTag(item) {
       this.videoPage = 1;
@@ -93,9 +110,9 @@ export default {
         offset: 8 * (this.videoPage - 1),
       });
       this.videoPage++;
-      console.log(res);
+      // console.log(res);
       this.videoList.push(...res.datas);
-      this.hasMore = res.hasMore;
+      this.hasMore = res.hasmore;
       this.disabled = false;
     },
     // 上拉触底触发
@@ -104,6 +121,10 @@ export default {
         this.getVideoList(this.currentTag.id);
       }
       this.disabled = true;
+    },
+    // 根据id到达VideoDetails
+    goVideoDetails(id) {
+      this.$router.push({ name: "VideoDetails", params: { id: id } });
     },
   },
 };
@@ -141,6 +162,22 @@ export default {
   margin: 0 2% 20px 0;
   overflow: hidden;
   cursor: pointer;
+  .videoImgWrap {
+    position: relative;
+    color: white;
+    font-size: 14px;
+    overflow: hidden;
+    .durationmsTime {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+    }
+    .playTime {
+      position: absolute;
+      top: 6%;
+      right: 5%;
+    }
+  }
 }
 .playlistItem img {
   width: 100%;

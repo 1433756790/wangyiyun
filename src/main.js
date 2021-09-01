@@ -11,6 +11,11 @@ Vue.filter('datefmt', function (input, fmtstring) {//当input为时间戳，需�
     return "";
   }
 });
+Vue.filter('playcountfmt', function (value) {
+  if (!value) return "";
+  value = (value / 10000).toFixed(1);
+  return value;
+})
 
 // 引入axios
 import { request } from './network/request'
