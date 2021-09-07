@@ -17,8 +17,16 @@
           popper-class="inputPopover"
         >
           <!-- 热搜作品榜 -->
-          <div class="hot">热搜榜</div>
-          <el-table :data="hotList" style="width: 100%" :show-header="false">
+          <div class="hot" v-if="!searchInput">热搜榜</div>
+          <div class="hot" v-else style="cursor: pointer">
+            搜"{{ searchInput }}"相关用户>
+          </div>
+          <el-table
+            :data="hotList"
+            style="width: 100%"
+            :show-header="false"
+            v-if="!searchInput"
+          >
             <el-table-column type="index"></el-table-column>
             <el-table-column>
               <template slot-scope="scoped">
@@ -27,12 +35,65 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="searchSuggest" v-else>
+            <!-- 单曲 -->
+            <div class="single" v-show="suggestList.songs">
+              <div class="iWrap">
+                <i><font-awesome-icon icon="music" />&nbsp;单曲</i>
+              </div>
+              <div
+                v-for="(item, index) in suggestList.songs"
+                :key="index"
+                class="searchContent"
+              >
+                <div>{{ item.name }}-{{ item.artists[0].name }}</div>
+              </div>
+            </div>
+            <!-- 歌手 -->
+            <div class="singer" v-show="suggestList.artists">
+              <div class="iWrap"><i class="el-icon-user">&nbsp;歌手</i></div>
+              <div
+                v-for="(item, index) in suggestList.artists"
+                :key="index"
+                class="searchContent"
+              >
+                <div>{{ item.name }}</div>
+              </div>
+            </div>
+            <!-- 专辑 -->
+            <div class="album" v-show="suggestList.albums">
+              <div class="iWrap">
+                <i><font-awesome-icon icon="compact-disc" />&nbsp;专辑</i>
+              </div>
+              <div
+                v-for="(item, index) in suggestList.albums"
+                :key="index"
+                class="searchContent"
+              >
+                <div>{{ item.name }}-{{ item.artist.name }}</div>
+              </div>
+            </div>
+            <!-- 歌单 -->
+            <div class="songList" v-show="suggestList.playlists">
+              <div class="iWrap">
+                <i><font-awesome-icon icon="headphones" />&nbsp;歌单</i>
+              </div>
+              <div
+                v-for="(item, index) in suggestList.playlists"
+                :key="index"
+                class="searchContent"
+              >
+                <div>{{ item.name }}</div>
+              </div>
+            </div>
+          </div>
           <!-- 输入框 -->
           <el-input
             placeholder="请输入内容"
             prefix-icon="el-icon-search"
             v-model="searchInput"
             slot="reference"
+            @input="getSearchSuggest"
           >
           </el-input>
         </el-popover>
@@ -115,6 +176,7 @@ export default {
       userInfo: {},
       // 热搜作品榜
       hotList: [],
+      suggestList: {},
     };
   },
   methods: {
@@ -162,6 +224,16 @@ export default {
     async getHotList() {
       const { data: res } = await this.$http("/search/hot/detail");
       this.hotList = res.data;
+      console.log(res);
+    },
+    async getSearchSuggest() {
+      let timestamp = Date.parse(new Date());
+      const { data: res } = await this.$http("/search/suggest", {
+        keywords: this.searchInput,
+        timestamp,
+      });
+      console.log(res);
+      this.suggestList = res.result;
     },
   },
   created() {
@@ -257,6 +329,37 @@ export default {
 }
 .hot {
   font-size: 18px;
-  margin-left: 13px;
+  padding-left: 13px;
+  border-bottom: 1px solid #666666;
+}
+.searchSuggest {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1px;
+  > div {
+    display: flex;
+    flex-direction: column;
+    .iWrap {
+      font-size: 16px;
+      background-color: rgba(245, 245, 247);
+      i {
+        margin-left: 13px;
+      }
+    }
+    .searchContent {
+      line-height: 30px;
+      cursor: pointer;
+      font-size: 15px;
+      width: 100%;
+      &:hover {
+        background-color: rgba(147, 147, 158, 0.4);
+      }
+      > div {
+        height: 100%;
+        padding-left: 33px;
+        padding-right: 3px;
+      }
+    }
+  }
 }
 </style>

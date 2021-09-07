@@ -124,7 +124,10 @@ export default {
     },
     // 根据id到达VideoDetails
     goVideoDetails(id) {
-      this.$router.push({ name: "VideoDetails", params: { id: id } });
+      this.$router.push({
+        name: "VideoDetails",
+        params: { id: id, type: "video" },
+      });
     },
   },
 };
@@ -180,8 +183,9 @@ export default {
   }
 }
 .playlistItem img {
+  flex-shrink: 0;
   width: 100%;
-  // height: 100%;
+  max-height: 144px;
   border-radius: 10px;
 }
 </style>>

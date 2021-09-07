@@ -9,6 +9,12 @@
 .el-table th.is-leaf {
   border: none;
 }
-.inputPopover .el-table thead{
-    cursor: pointer;
+.inputPopover .el-table .el-table__row{
+  cursor: pointer;
+}
+.inputPopover::-webkit-scrollbar{
+  width: 4px;
+}
+.inputPopover .el-table::before{
+  height: 0;
 }

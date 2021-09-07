@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <el-tabs v-model="activeName">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="歌曲列表" name="musicList">
           <!-- 歌曲列表 -->
           <el-table
@@ -40,15 +40,40 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="评论" name="comments"></el-tab-pane>
-        <el-tab-pane label="收藏者" name="collector"></el-tab-pane>
+        <el-tab-pane label="评论" name="comments">
+          <comments
+            :commentType="2"
+            @scrollToComment="scrollToComment"
+            :getCommentsStyle="commentType"
+            class="comment"
+          ></comments>
+        </el-tab-pane>
+        <el-tab-pane label="收藏者" name="collector">
+          <collectors
+            :subscribers="subscribers"
+            v-infinite-scroll="load"
+            :infinite-scroll-disabled="disabled"
+            :infinite-scroll-distance="200"
+            :infinite-scroll-immediate="false"
+          ></collectors>
+        </el-tab-pane>
       </el-tabs>
     </div>
+    <el-backtop
+      target=".el-main"
+      :visibility-height="300"
+      :bottom="100"
+      :right="30"
+    >
+    </el-backtop>
   </div>
 </template>
 
 <script>
+import Comments from "../../comment/Comments.vue";
+import Collectors from "./Collectors.vue";
 export default {
+  components: { Comments, Collectors },
   watch: {
     "$store.state.playIndex"(index) {
       this.$refs.musicTable.setCurrentRow(this.musicList[index]);
@@ -58,6 +83,12 @@ export default {
   data() {
     return {
       activeName: "musicList",
+      commentType: 2,
+      // 收藏者页数
+      currentCollectPage: 1,
+      subscribers: [],
+      hasMore: false,
+      disabled: true,
     };
   },
   methods: {
@@ -85,6 +116,41 @@ export default {
       if (!this.$store.state.isPlay) {
         this.$store.commit("updatePlayState");
       }
+    },
+    // 滚动到指定位置
+    scrollToComment() {
+      let videoDetails = document.querySelector(".el-main");
+      let commentTitle = document.querySelector(".comment");
+      videoDetails.scrollTo({
+        behavior: "smooth",
+        top: commentTitle.offsetTop - 70,
+      });
+    },
+
+    // 获取歌单的收藏者
+    async getMusicListCollector() {
+      const { data: res } = await this.$http("/playlist/subscribers", {
+        id: this.$route.params.id,
+        limit: 20,
+        offest: (this.currentCollectPage - 1) * 20,
+      });
+      this.currentCollectPage++;
+      this.hasMore = res.more;
+      this.subscribers.push(...res.subscribers);
+      this.disabled = false;
+      console.log(res);
+    },
+    handleClick(tab, event) {
+      if (tab.name == "collector" && this.subscribers.length == 0) {
+        this.getMusicListCollector();
+      }
+    },
+    // 上拉触底触发
+    load() {
+      if (this.hasMore) {
+        this.getMusicListCollector();
+      }
+      this.disabled = true;
     },
   },
 };

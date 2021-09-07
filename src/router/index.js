@@ -47,7 +47,7 @@ const routes = [
 
         ]
       },
-      { path: '/videoDetails/:id', component: VideoDetails, name: 'VideoDetails' },
+      { path: '/videoDetails/:id/:type', component: VideoDetails, name: 'VideoDetails' },
     ]
   },
 ]

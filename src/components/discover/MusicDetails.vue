@@ -43,7 +43,7 @@
           </div>
           <div class="row5">
             <div>歌曲：{{ listDetailsData.trackCount }}</div>
-            <div>播放量：{{ listDetailsData.playCount }}</div>
+            <div>播放量：{{ listDetailsData.playCount | playcountfmt }}万</div>
           </div>
           <div class="row6">
             <div>简介：{{ listDetailsData.description }}</div>
