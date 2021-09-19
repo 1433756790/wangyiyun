@@ -113,7 +113,6 @@ export default {
         cursor: this.currentPage === 1 ? "" : this.cursor,
         timestamp,
       });
-      console.log(res);
       this.commentInfo = res.data.comments;
       this.total = res.data.totalCount;
       this.cursor = res.data.cursor;

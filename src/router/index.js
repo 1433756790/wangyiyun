@@ -12,6 +12,10 @@ const Video = () => import('../components/video/Video.vue')
 const VideoList = () => import('../components/video/VideoList.vue')
 const MVList = () => import('../components/video/MVList.vue')
 const VideoDetails = () => import('../components/video/VideoDetails.vue')
+const Songs = () => import('../components/search/Songs.vue')
+const AlbumDetails = () => import('../components/album/AlbumDetails.vue')
+const PersonalHome = () => import('../components/home/PersonalHome.vue')
+
 
 Vue.use(VueRouter)
 
@@ -48,6 +52,10 @@ const routes = [
         ]
       },
       { path: '/videoDetails/:id/:type', component: VideoDetails, name: 'VideoDetails' },
+      { path: '/song/:id', component: Songs, name: 'Song' },
+      { path: '/albumDetails/:id', component: AlbumDetails, name: 'AlbumDetails' },
+      { path: '/personalHome/:id', component: PersonalHome, name: 'PersonalHome' },
+
     ]
   },
 ]

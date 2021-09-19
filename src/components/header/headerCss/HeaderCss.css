@@ -18,3 +18,28 @@
 .inputPopover .el-table::before{
   height: 0;
 }
+.personalPopover{
+  background-color: rgb(43,43,43) !important;
+  border: none !important; 
+  padding: 0 !important;
+  transform: translate(2px,-5px);
+}
+.personalPopover .popper__arrow::after{
+  border-bottom-color: rgb(43,43,43) !important;
+}
+.personalBtn{
+  color: rgb(189, 185, 185);
+}
+.personalBtn i{
+  margin-right: 10px;
+  margin-left: 20px;
+}
+.personalBtn div{
+  line-height: 35px;
+  cursor: pointer;
+}
+.personalBtn div:hover{
+  color: rgb(228, 226, 226);
+  background-color: rgb(53,53,53);
+}
+

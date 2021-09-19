@@ -48,6 +48,7 @@
 <script>
 import AlbumList from "../album/AlbumList.vue";
 export default {
+  inject: ["reload"],
   components: { AlbumList },
   data() {
     return {
@@ -95,6 +96,11 @@ export default {
       this.singerAlbumList.push(res.album);
       this.singerAlbum.push(songs);
       // console.log(songs)
+    },
+  },
+  watch: {
+    $route: function () {
+      this.reload();
     },
   },
 };

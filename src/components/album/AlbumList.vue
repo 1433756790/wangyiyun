@@ -70,7 +70,7 @@ export default {
     clickRow(row, item) {
       this.$store.commit("updateMusicId", row);
       if (!this.$store.state.isPlay) {
-        this.$store.commit("updatePlayState");
+        this.$store.commit("updatePlayState",true);
       }
       this.$store.commit("updateAllPlayTime", row.dt);
       this.$store.commit("updateMusicList", item);

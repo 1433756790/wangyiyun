@@ -137,18 +137,18 @@ export default {
       this.hasPlayTime = "0";
       this.allPlayTime = this.$store.state.allPlayTime;
       this.musicUrl = res.data[0].url;
-      console.log(this.musicUrl)
+      console.log(this.musicUrl);
     },
     // 播放音乐
     playAudio() {
       if (!this.musicUrl) return;
       this.$refs.audioPlayer.play();
-      this.$store.commit("updatePlayState");
+      this.$store.commit("updatePlayState",true);
     },
     // 暂停播放
     stopAudio() {
       this.$refs.audioPlayer.pause();
-      this.$store.commit("updatePlayState");
+      this.$store.commit("updatePlayState",false);
     },
     // 播放的时间变化
     timeupdate() {

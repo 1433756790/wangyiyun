@@ -77,6 +77,7 @@ export default {
   watch: {
     "$store.state.playIndex"(index) {
       this.$refs.musicTable.setCurrentRow(this.musicList[index]);
+      console.log(1);
     },
   },
   props: ["musicList", "listDetailsData"],
@@ -114,7 +115,7 @@ export default {
         this.$store.commit("updateAllPlayTime", row.dt);
       }
       if (!this.$store.state.isPlay) {
-        this.$store.commit("updatePlayState");
+        this.$store.commit("updatePlayState", true);
       }
     },
     // 滚动到指定位置
@@ -132,13 +133,12 @@ export default {
       const { data: res } = await this.$http("/playlist/subscribers", {
         id: this.$route.params.id,
         limit: 20,
-        offest: (this.currentCollectPage - 1) * 20,
+        offset: (this.currentCollectPage - 1) * 20,
       });
       this.currentCollectPage++;
       this.hasMore = res.more;
       this.subscribers.push(...res.subscribers);
       this.disabled = false;
-      console.log(res);
     },
     handleClick(tab, event) {
       if (tab.name == "collector" && this.subscribers.length == 0) {
@@ -153,6 +153,11 @@ export default {
       this.disabled = true;
     },
   },
+  // watch: {
+  //   $route: function () {
+  //     this.$router.go(0);
+  //   },
+  // },
 };
 </script>
 

@@ -144,6 +144,7 @@
 <script>
 import Comments from "../comment/Comments.vue";
 export default {
+  inject: ["reload"],
   components: {
     Comments,
   },
@@ -225,8 +226,7 @@ export default {
   },
   watch: {
     $route() {
-      console.log("页面切换");
-      this.$router.go(0);
+      this.reload();
     },
   },
 };

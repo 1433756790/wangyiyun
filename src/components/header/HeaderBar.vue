@@ -15,6 +15,7 @@
           trigger="focus"
           :visible-arrow="false"
           popper-class="inputPopover"
+          v-model="isPopover"
         >
           <!-- 热搜作品榜 -->
           <div class="hot" v-if="!searchInput">热搜榜</div>
@@ -45,6 +46,7 @@
                 v-for="(item, index) in suggestList.songs"
                 :key="index"
                 class="searchContent"
+                @click="pushSelected('songs', item.id)"
               >
                 <div>{{ item.name }}-{{ item.artists[0].name }}</div>
               </div>
@@ -56,6 +58,7 @@
                 v-for="(item, index) in suggestList.artists"
                 :key="index"
                 class="searchContent"
+                @click="pushSelected('singer', item.id)"
               >
                 <div>{{ item.name }}</div>
               </div>
@@ -69,6 +72,7 @@
                 v-for="(item, index) in suggestList.albums"
                 :key="index"
                 class="searchContent"
+                @click="pushSelected('album', item.id)"
               >
                 <div>{{ item.name }}-{{ item.artist.name }}</div>
               </div>
@@ -82,6 +86,7 @@
                 v-for="(item, index) in suggestList.playlists"
                 :key="index"
                 class="searchContent"
+                @click="pushSelected('playlists', item.id)"
               >
                 <div>{{ item.name }}</div>
               </div>
@@ -93,6 +98,7 @@
             prefix-icon="el-icon-search"
             v-model="searchInput"
             slot="reference"
+            v-popover:popover
             @input="getSearchSuggest"
           >
           </el-input>
@@ -140,10 +146,21 @@
             ></el-avatar>
           </el-popover>
           <!-- 登录状态 -->
-          <el-popover placement="bottom" width="330" trigger="click" v-else>
-            <el-button type="danger" @click="loginOut" class="loginOut"
-              >退出登录</el-button
-            >
+          <el-popover
+            placement="bottom"
+            width="150"
+            trigger="hover"
+            popper-class="personalPopover"
+            v-else
+          >
+            <div class="personalBtn">
+              <div @click="goPersonalHome">
+                <i class="el-icon-user"></i>我的主页
+              </div>
+              <div @click="loginOut">
+                <i class="el-icon-switch-button"></i>退出
+              </div>
+            </div>
             <el-avatar
               :size="37.5"
               fit="fit"
@@ -153,6 +170,7 @@
             ></el-avatar>
           </el-popover>
         </div>
+        <!-- 按钮 -->
         <span v-if="!userInfo.nickname">点击头像登录</span>
         <span v-else>{{ userInfo.nickname }}</span>
       </div>
@@ -177,6 +195,7 @@ export default {
       // 热搜作品榜
       hotList: [],
       suggestList: {},
+      isPopover: false,
     };
   },
   methods: {
@@ -224,7 +243,7 @@ export default {
     async getHotList() {
       const { data: res } = await this.$http("/search/hot/detail");
       this.hotList = res.data;
-      console.log(res);
+      console.log("热搜", res);
     },
     async getSearchSuggest() {
       let timestamp = Date.parse(new Date());
@@ -232,8 +251,33 @@ export default {
         keywords: this.searchInput,
         timestamp,
       });
-      console.log(res);
       this.suggestList = res.result;
+    },
+    //根据类别到达指定的搜索内容区
+    pushSelected(type, id) {
+      this.isPopover = false;
+      switch (type) {
+        case "singer":
+          this.$router.push({ name: "SingerDetails", params: { id } });
+          break;
+        case "playlists":
+          this.$router.push({ name: "musicDetails", params: { id } });
+          break;
+        case "songs":
+          this.$router.push({ name: "Song", params: { id } });
+          break;
+        case "album":
+          this.$router.push({ name: "AlbumDetails", params: { id } });
+          break;
+        default:
+          break;
+      }
+    },
+    goPersonalHome() {
+      this.$router.push({
+        name: "PersonalHome",
+        params: { id: this.userInfo.userId },
+      });
     },
   },
   created() {

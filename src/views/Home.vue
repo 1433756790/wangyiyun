@@ -5,7 +5,7 @@
       <el-header>
         <header-bar></header-bar>
       </el-header>
-      <el-container>
+      <el-container v-if="isRouterAlive">
         <el-aside width="200px">
           <el-menu
             default-active="2"
@@ -53,6 +53,22 @@ export default {
     pushRouter(route) {
       this.$router.push(route);
     },
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function () {
+        this.isRouterAlive = true;
+      });
+    },
+  },
+  provide() {
+    return {
+      reload: this.reload,
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true,
+    };
   },
 };
 </script>

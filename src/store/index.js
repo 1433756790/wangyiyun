@@ -38,8 +38,8 @@ const store = new Vuex.Store({
             // console.log(state.playMusicMessage)
         },
         // 更新音乐播放状态
-        updatePlayState(state) {
-            state.isPlay = !state.isPlay
+        updatePlayState(state,type) {
+            state.isPlay = type
         },
         // 更新音乐播放总长
         updateAllPlayTime(state, dt) {

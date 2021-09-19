@@ -28,8 +28,12 @@
             <el-button type="danger" round size="medium">
               <i><font-awesome-icon icon="play" /></i>播放全部
             </el-button>
-            <el-button round size="medium">
-              <i><font-awesome-icon :icon="['far', 'heart']" /></i>收藏
+            <el-button round size="medium" @click="collectTheList">
+              <i
+                ><font-awesome-icon
+                  :icon="['far', 'heart']"
+                  :class="{ hasSubscribed: listDetailsData.subscribed }" /></i
+              >收藏
             </el-button>
             <el-button round size="medium">
               <i><font-awesome-icon :icon="['far', 'share-square']" /></i>分享
@@ -63,6 +67,7 @@
 <script>
 import MusicDetailsBottom from "./musicDetailsChild/MusicDetailsBottom.vue";
 export default {
+  inject: ["reload"],
   components: { MusicDetailsBottom },
   data() {
     return {
@@ -76,12 +81,32 @@ export default {
   methods: {
     //根据id获取歌单详情
     async getMusicListDetails() {
+      let timestamp = Date.parse(new Date());
       const { data: res } = await this.$http(`/playlist/detail`, {
         id: this.$route.params.id,
+        timestamp,
       });
       this.listDetailsData = res.playlist;
       this.musicList = res.playlist.tracks;
-      console.log(res);
+      console.log("歌单详情", res);
+    },
+    // （取消）收藏歌单
+    async collectTheList() {
+      let timestamp = Date.parse(new Date());
+      const { data: res } = await this.$http("/playlist/subscribe", {
+        id: this.$route.params.id,
+        t: this.listDetailsData.subscribed ? 2 : 1,
+        timestamp,
+      });
+      this.getMusicListDetails();
+      return this.listDetailsData.subscribed
+        ? this.$message.success("取消收藏成功")
+        : this.$message.success("收藏成功");
+    },
+  },
+  watch: {
+    $route() {
+      this.reload();
     },
   },
 };
@@ -159,10 +184,16 @@ export default {
     }
   }
   .row6 {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    max-width: 700px;
     font-size: 13px;
+    div {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
+}
+.hasSubscribed {
+  color: #f56c6c;
 }
 </style>>
