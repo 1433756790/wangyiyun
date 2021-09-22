@@ -185,8 +185,8 @@ export default {
       searchInput: "",
       avatorImg: require("@/../public/img/test.jpg"),
       loginData: {
-        phone: "15715268261",
-        password: "yyh502498",
+        phone: "",
+        password: "",
       },
       // 登录登出显示
       isPopoverShow: false,
