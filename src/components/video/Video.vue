@@ -15,6 +15,7 @@ export default {
       activeName: "",
     };
   },
+  
   methods: {
     handleClick(tab, event) {
       this.$router.push(tab.name);

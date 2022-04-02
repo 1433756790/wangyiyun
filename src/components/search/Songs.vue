@@ -151,6 +151,7 @@ export default {
       aboutAlbum: [],
       ishaveLyric: false,
       aboutSongs: [],
+      topDistance: 0,
     };
   },
   created() {
@@ -186,6 +187,12 @@ export default {
     },
     //控制歌词的展开
     extendCtrl() {
+      let videoDetails = document.querySelector(".el-main");
+      if (!this.isExtend) {
+        this.topDistance = videoDetails.scrollTop;
+      } else {
+        videoDetails.scrollTop = this.topDistance;
+      }
       this.isExtend = !this.isExtend;
       this.extendLine = this.isExtend ? this.lyric.length : 13;
     },
@@ -398,7 +405,7 @@ export default {
     font-size: 12px;
     color: #666;
     cursor: pointer;
-    &:hover{
+    &:hover {
       text-decoration: underline;
     }
   }

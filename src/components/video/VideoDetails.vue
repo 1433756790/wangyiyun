@@ -246,7 +246,9 @@ export default {
 }
 .videoWrap {
   margin-top: 15px;
+  height: 350px;
   .videoPlayer {
+    height: 100%;
   }
 }
 .videoInfo {

@@ -136,6 +136,9 @@ export default {
     },
     // 发送评论
     async pushComment() {
+      if (!this.$store.isLogin) {
+        return this.$message.error("登录之后才能评论");
+      }
       if (this.content === "") {
         return this.$message.warning("评论不能为空！");
       }

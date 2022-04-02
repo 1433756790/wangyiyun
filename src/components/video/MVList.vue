@@ -252,9 +252,13 @@ export default {
   width: 100%;
   max-height: 144px;
   border-radius: 10px;
+  height: auto;
 }
 .ItemText {
   margin-top: 10px;
   font-size: 15px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>

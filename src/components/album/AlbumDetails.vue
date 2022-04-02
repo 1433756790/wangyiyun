@@ -153,6 +153,7 @@ export default {
       activeName: "2",
       commentType: 3,
       singerAlbums: [],
+      topDistance: 0,
     };
   },
   methods: {
@@ -181,6 +182,12 @@ export default {
       console.log("专辑详情", res);
     },
     extendCtrl() {
+      let videoDetails = document.querySelector(".el-main");
+      if (this.isExtend) {
+        this.topDistance = videoDetails.scrollTop;
+      } else {
+        videoDetails.scrollTop = this.topDistance;
+      }
       this.isExtend = !this.isExtend;
     },
     // 滚动到指定位置
